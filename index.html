@@ -1,0 +1,94 @@
+<!DOCTYPE.html>
+<html lang="ja">
+<meta charset="UTF-8">
+<head>
+  <title>index</title>
+  </head>
+  <body>
+  参考：<a href="https://www.tam-tam.co.jp/tipsnote/javascript/post13538.html">
+  File APIとCanvasでローカルの画像をアップロード→加工→ダウンロードする<a><br>
+  <div class="upload"><input type="file" name="file" id="file">
+  <input type="button" value="クリア" onclick="program1();"><br>
+  <canvas id="canvas"></canvas>
+  <div id="rgb"></div>
+  <div id="rg"></div>
+  <div id="result"></div>
+  <script>
+    var file = document.getElementById('file');
+    var canvas = document.getElementById('canvas');
+    var uploadImgSrc;
+    var ctx = canvas.getContext('2d');
+    if(window.File && window.FileReader && window.FileList && window.Blob) {
+      function loadLocalImage(e) {
+        var fileData = e.target.files[0];
+        if(!fileData.type.match('image.*')) {
+          alert('画像を選択してください');
+          return;
+        };
+        var reader = new FileReader();
+        reader.onload = function() {
+          uploadImgSrc = reader.result;
+          canvasDraw();
+        };
+        reader.readAsDataURL(fileData);
+      };
+    }else{
+      file.style.display = 'none';
+      result.innerHTML = 'File APIに対応したブラウザでご確認ください';
+    };
+    file.addEventListener('change', loadLocalImage, false);
+
+    function canvasDraw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      var img = new Image();
+      img.src = uploadImgSrc;
+      img.onload = function() {
+        canvas.width = img.naturalWidth
+        canvas.height = img.naturalHeight
+        ctx.drawImage(img, 0, 0)
+        addText();
+        var data = canvas.toDataURL('image/jpg');
+        var dlLink = document.createElement('a');
+        dlLink.href = data;
+        dlLink.download = 'banana.jpg';
+        dlLink.innerText = 'ダウンロード';
+        document.getElementById("result").innerHTML = "";
+        document.getElementById('result').appendChild(dlLink);
+      }
+    }
+
+    function addText(){
+      var k = 0;
+      var r1 = 167;
+      var r2 = 190;
+      var r3 = 223;
+      var g1 = 132;
+      var g2 = 156;
+      var g3 = 190;
+      var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+      imageData.getRGB = function(x,y,z){
+        return this.data[this.width*4*y +4*x+z];
+      }
+      for(var i = 0; i <canvas.width; i++){
+        for(var j = 0; j <canvas.height; j++){
+          if(imageData.getRGB(i,j,0) >= r1 - 1 && imageData.getRGB(i,j,0) <= r1 + 1
+          || imageData.getRGB(i,j,1) >= r2 - 1 && imageData.getRGB(i,j,1) <= r2 + 1
+          || imageData.getRGB(i,j,1) >= r3 - 1 && imageData.getRGB(i,j,1) <= r3 + 1
+          || imageData.getRGB(i,j,1) >= g1 - 1 && imageData.getRGB(i,j,1) <= g1 + 1
+          || imageData.getRGB(i,j,1) >= g2 - 1 && imageData.getRGB(i,j,1) <= g2 + 1
+          || imageData.getRGB(i,j,1) >= g3 - 1 && imageData.getRGB(i,j,1) <= g3 + 1){
+          k = k + 1;
+          }
+        }
+      }
+      var y = 0.0000506485333741821 * k + 18.1800764710965
+      var rg = document.getElementById("rg");
+      rg.innerHTML = y;
+    }
+    function program1(){
+      file.value = "";
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+</script>
+</body>
+</html>
