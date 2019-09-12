@@ -2,17 +2,33 @@
 <html lang="ja">
 <meta charset="UTF-8">
 <head>
-  <title>index</title>
+  <title>バナナ糖度計</title>
   </head>
+  <style>
+  .format {
+  padding: 0.5em;
+  color: #494949;
+  background: #fffaf4;
+  border-left: solid 5px #ffaf58;
+  }
+  </style>
   <body>
-  参考：<a href="https://www.tam-tam.co.jp/tipsnote/javascript/post13538.html">
-  File APIとCanvasでローカルの画像をアップロード→加工→ダウンロードする<a><br>
-  <div class="upload"><input type="file" name="file" id="file">
-  <input type="button" value="クリア" onclick="program1();"><br>
+  <div><div class="format">画像読み込み式バナナ糖度計</div></div>
+  <br>
+  バナナの画像を「ファイルを選択」からアップロードすると自動で糖度を推定します。<br>
+  ・できるだけバナナが写真の中央に位置し、全体を含むようにしてください。<br>
+  ・背景が白いほうが正確性が向上します。(
+  <a href="https://www.remove.bg/">removebg<a>
+    を一度使用することを推奨します。)<br>
+  ・APIに対応していない場合はファイルを読み込めない場合があります。<br>
+  ・その他、質問等はyuto.h09@tguiss.jpまで<br><br>
+  <form name = "form1">
+    画像を表示する<input type="checkbox" name="checkbox1"><br>
+    <input type="button" value="画像をクリア" onclick="program1();" style="WIDTH:110px; HEIGHT:25px"><br>
+    <div class="upload"><input type="file" name="file" id="file"><br>
+  </form>
+  糖度(Brix％)：<div id="result"></div>
   <canvas id="canvas"></canvas>
-  <div id="rgb"></div>
-  <div id="rg"></div>
-  <div id="result"></div>
   <script>
     var file = document.getElementById('file');
     var canvas = document.getElementById('canvas');
@@ -34,7 +50,7 @@
       };
     }else{
       file.style.display = 'none';
-      result.innerHTML = 'File APIに対応したブラウザでご確認ください';
+      result.innerHTML = 'APIに対応したブラウザでご確認ください';
     };
     file.addEventListener('change', loadLocalImage, false);
 
@@ -47,23 +63,17 @@
         canvas.height = img.naturalHeight
         ctx.drawImage(img, 0, 0)
         addText();
-        var data = canvas.toDataURL('image/jpg');
-        var dlLink = document.createElement('a');
-        dlLink.href = data;
-        dlLink.download = 'banana.jpg';
-        dlLink.innerText = 'ダウンロード';
-        document.getElementById("result").innerHTML = "";
-        document.getElementById('result').appendChild(dlLink);
       }
     }
 
     function addText(){
       var k = 0;
+      var b1 = 40;
       var r1 = 167;
-      var r2 = 190;
-      var r3 = 223;
       var g1 = 132;
+      var r2 = 190;
       var g2 = 156;
+      var r3 = 223;
       var g3 = 190;
       var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
       imageData.getRGB = function(x,y,z){
@@ -71,23 +81,28 @@
       }
       for(var i = 0; i <canvas.width; i++){
         for(var j = 0; j <canvas.height; j++){
-          if(imageData.getRGB(i,j,0) >= r1 - 1 && imageData.getRGB(i,j,0) <= r1 + 1
-          || imageData.getRGB(i,j,1) >= r2 - 1 && imageData.getRGB(i,j,1) <= r2 + 1
-          || imageData.getRGB(i,j,1) >= r3 - 1 && imageData.getRGB(i,j,1) <= r3 + 1
-          || imageData.getRGB(i,j,1) >= g1 - 1 && imageData.getRGB(i,j,1) <= g1 + 1
-          || imageData.getRGB(i,j,1) >= g2 - 1 && imageData.getRGB(i,j,1) <= g2 + 1
-          || imageData.getRGB(i,j,1) >= g3 - 1 && imageData.getRGB(i,j,1) <= g3 + 1){
-          k = k + 1;
+          if(imageData.getRGB(i,j,2) >= b1 - 30 && imageData.getRGB(i,j,2) <= b1 + 30){
+            if(imageData.getRGB(i,j,0) == r1
+            || imageData.getRGB(i,j,1) == g1
+            || imageData.getRGB(i,j,0) == g2
+            || imageData.getRGB(i,j,1) == r2
+            || imageData.getRGB(i,j,0) == r3
+            || imageData.getRGB(i,j,1) == g3){
+              k = k + 1;
+            }
           }
         }
       }
-      var y = 0.0000506485333741821 * k + 18.1800764710965
-      var rg = document.getElementById("rg");
-      rg.innerHTML = y;
+      var sugar = 0.000169423749928518 * k + 18.5442722313084
+      var result = document.getElementById("result");
+      result.innerHTML = sugar;
+      if(!(document.form1.checkbox1.checked)){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+      }
     }
     function program1(){
       file.value = "";
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
     }
 </script>
 </body>
