@@ -22,9 +22,9 @@
     を一度使用することを推奨します。)<br>
   ・APIに対応していない場合はファイルを読み込めない場合があります。<br><br>
   <form name = "form1">
+    <div class="upload"><input type="file" value = "画像をアップロード" name="file" id="file"><br>
     画像を表示する<input type="checkbox" name="checkbox1"><br>
     <input type="button" value="画像をクリア" onclick="program1();" style="WIDTH:110px; HEIGHT:25px"><br>
-    <div class="upload"><input type="file" value = "画像をアップロード" name="file" id="file"><br>
   </form>
   糖度(Brix％)：<div id="result"></div>
   <canvas id="canvas"></canvas><br>
@@ -35,15 +35,15 @@
   <script type="text/javascript" id="hcb"> /*<!--*/ if(!window.hcb_user){hcb_user={};} (function(){var s=document.createElement("script"), l=hcb_user.PAGE || (""+window.location).replace(/'/g,"%27"), h="https://www.htmlcommentbox.com";s.setAttribute("type","text/javascript");s.setAttribute("src", h+"/jread?page="+encodeURIComponent(l).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24cOgzgOE3BusndKeCERGUz0"+"&opts=16862&num=10&ts=1568901733608");if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})(); /*-->*/ </script>
   <!-- end www.htmlcommentbox.com -->
   <script>
-    var file = document.getElementById('file');
-    var canvas = document.getElementById('canvas');
+    var file = document.getElementById("file");
+    var canvas = document.getElementById("canvas");
     var uploadImgSrc;
-    var ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext("2d");
     if(window.File && window.FileReader && window.FileList && window.Blob) {
       function loadLocalImage(e) {
         var fileData = e.target.files[0];
-        if(!fileData.type.match('image.*')) {
-          alert('画像を選択してください');
+        if(!fileData.type.match("image.*")) {
+          alert("画像を選択してください");
           return;
         };
         var reader = new FileReader();
@@ -54,22 +54,22 @@
         reader.readAsDataURL(fileData);
       };
     }else{
-      file.style.display = 'none';
-      result.innerHTML = 'APIに対応したブラウザでご確認ください';
+      file.style.display = "none";
+      result.innerHTML = "APIに対応したブラウザでご確認ください";
     };
-    file.addEventListener('change', loadLocalImage, false);
+    file.addEventListener("change", loadLocalImage, false);
 
     function canvasDraw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       var img = new Image();
       img.src = uploadImgSrc;
       img.onload = function() {
-        canvas.width = img.naturalWidth
-        canvas.height = img.naturalHeight
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
         ctx.drawImage(img, 0, 0)
         addText();
-      }
-    }
+      };
+    };
 
     function addText(){
       var k = 0;
@@ -80,9 +80,10 @@
       var g2 = 156;
       var r3 = 223;
       var g3 = 190;
+      canvas.size = canvas.width*canvas.height;
       var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
       imageData.getRGB = function(x,y,z){
-        return this.data[this.width*4*y +4*x+z];
+        return this.data[this.width*4*y+4*x+z];
       }
       for(var i = 0; i <canvas.width; i++){
         for(var j = 0; j <canvas.height; j++){
@@ -94,21 +95,27 @@
             || imageData.getRGB(i,j,0) == r3
             || imageData.getRGB(i,j,1) == g3){
               k = k + 1;
-            }
-          }
-        }
-      }
-      var sugar = 0.000169423749928518 * k + 18.5442722313084
+            };
+          };
+        };
+      };
+      var sugar = 285.902578*k/canvas.size+18.54427223;
       var result = document.getElementById("result");
       result.innerHTML = sugar;
       if(!(document.form1.checkbox1.checked)){
         ctx.clearRect(0,0,canvas.width,canvas.height);
-      }
-    }
+        var canvas2 = document.getElementById("canvas");
+        canvas2.width = 0;
+        canvas2.height = 0;
+      };
+    };
     function program1(){
       file.value = "";
       ctx.clearRect(0,0,canvas.width,canvas.height);
-    }
+      var canvas2 = document.getElementById("canvas");
+      canvas2.width = 0;
+      canvas2.height = 0;
+    };
 </script>
 </body>
 </html>
