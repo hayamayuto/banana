@@ -21,13 +21,14 @@
   <a href="https://www.remove.bg/">removebg<a>
     を一度使用することを推奨します。)<br>
   ・APIに対応していない場合はファイルを読み込めない場合があります。<br><br>
-  <div class="upload"><input type="file" value = "画像をアップロード" name="file" id="file"><br>
-  <form name = "form0">
-  画像を表示する<input type="checkbox"><br>
-  </form>
+  <div class="upload"><input type="file" id="file"><br>
   <input type="button" value="画像をクリア" onclick="program1();" style="WIDTH:110px; HEIGHT:25px"><br>
-  糖度(Brix％)：<div id="result"></div>
-  <canvas id="canvas"></canvas><br><br>
+  <form name = "form0">
+  画像を表示する<input type="checkbox">
+  </form>
+  糖度(Brix％)：
+  <span id="result"></span><br><br>
+  <canvas id="canvas"></canvas><br>
   コメントは下まで↓<br>
   <!-- begin wwww.htmlcommentbox.com -->
   <div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">Comment Box</a> is loading comments...</div>
@@ -39,6 +40,10 @@
     var canvas = document.getElementById("canvas");
     var uploadImgSrc;
     var ctx = canvas.getContext("2d");
+    window.onload = function(){
+      canvas.width = 0;
+      canvas.height = 0;
+    }
     if(window.File && window.FileReader && window.FileList && window.Blob) {
       function loadLocalImage(e) {
         var fileData = e.target.files[0];
