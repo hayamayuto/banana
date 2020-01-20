@@ -3,118 +3,35 @@
 <meta charset="UTF-8">
 <head>
   <title>バナナ糖度計</title>
-  </head>
-  <style>
-  .format {
-  padding: 0.5em;
-  color: #494949;
-  background: #fffaf4;
-  border-left: solid 5px #ffaf58;
-  }
-  </style>
-  <body>
-  <div><div class="format">画像読み込み式バナナ糖度計</div></div>
-  <br>
-  バナナの画像を「ファイルを選択」からアップロードすると自動で糖度を推定します。<br>
-  ・できるだけバナナが写真の中央に位置し、全体を含むようにしてください。<br>
-  ・背景が白いほうが正確性が向上します。(
-  <a href="https://www.remove.bg/">removebg<a>
-    を一度使用することを推奨します。)<br>
-  ・APIに対応していない場合はファイルを読み込めない場合があります。<br><br>
-  <div class="upload"><input type="file" id="file"><br>
-  <input type="button" value="画像をクリア" onclick="program1();" style="WIDTH:110px; HEIGHT:25px"><br>
-  <form name = "form0">
-  画像を表示する<input type="checkbox">
-  </form>
-  糖度(Brix％)：
-  <span id="result"></span><br><br>
-  <canvas id="canvas"></canvas><br>
-  <script>
-    var file = document.getElementById("file");
-    var canvas = document.getElementById("canvas");
-    var uploadImgSrc;
-    var ctx = canvas.getContext("2d");
-    window.onload = function(){
-      canvas.width = 0;
-      canvas.height = 0;
-    }
-    if(window.File && window.FileReader && window.FileList && window.Blob) {
-      function loadLocalImage(e) {
-        var fileData = e.target.files[0];
-        if(!fileData.type.match("image.*")) {
-          alert("画像を選択してください");
-          return;
-        };
-        var reader = new FileReader();
-        reader.onload = function() {
-          uploadImgSrc = reader.result;
-          canvasDraw();
-        };
-        reader.readAsDataURL(fileData);
-      };
-    }else{
-      file.style.display = "none";
-      result.innerHTML = "APIに対応したブラウザでご確認ください";
-    };
-    file.addEventListener("change", loadLocalImage, false);
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    function canvasDraw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      var img = new Image();
-      img.src = uploadImgSrc;
-      img.onload = function() {
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        ctx.drawImage(img, 0, 0)
-        addText();
-      };
-    };
-
-    function addText(){
-      var k = 0;
-      var b1 = 40;
-      var r1 = 167;
-      var g1 = 132;
-      var r2 = 190;
-      var g2 = 156;
-      var r3 = 223;
-      var g3 = 190;
-      canvas.size = canvas.width*canvas.height;
-      var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
-      imageData.getRGB = function(x,y,z){
-        return this.data[this.width*4*y+4*x+z];
-      }
-      for(var i = 0; i <canvas.width; i++){
-        for(var j = 0; j <canvas.height; j++){
-          if(imageData.getRGB(i,j,2) >= b1 - 30 && imageData.getRGB(i,j,2) <= b1 + 30){
-            if(imageData.getRGB(i,j,0) == r1
-            || imageData.getRGB(i,j,1) == g1
-            || imageData.getRGB(i,j,0) == g2
-            || imageData.getRGB(i,j,1) == r2
-            || imageData.getRGB(i,j,0) == r3
-            || imageData.getRGB(i,j,1) == g3){
-              k = k + 1;
-            };
-          };
-        };
-      };
-      var sugar = 285.902578*k/canvas.size+18.54427223;
-      var result = document.getElementById("result");
-      result.innerHTML = sugar;
-      if(!(document.form0.elements[0].checked)){
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        var canvas2 = document.getElementById("canvas");
-        canvas2.width = 0;
-        canvas2.height = 0;
-      };
-    };
-    function program1(){
-      file.value = "";
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      var canvas2 = document.getElementById("canvas");
-      canvas2.width = 0;
-      canvas2.height = 0;
-    };
-</script>
+  <script src="https://unpkg.com/ml5@0.4.3/dist/ml5.min.js"></script>
+</head>
+<style>
+.format {
+padding: 0.5em;
+color: #494949;
+background: #fffaf4;
+border-left: solid 5px #ffaf58;
+}
+</style>
+<body>
+<div><div class="format">画像読み込み式バナナ糖度計</div></div>
+<br>
+バナナの画像を「ファイルを選択」からアップロードすると自動で糖度を推定します。<br>
+・できるだけバナナが写真の中央に位置し、全体を含むようにしてください。<br>
+・背景が白いほうが正確性が向上します。(
+<a href="https://www.remove.bg/">removebg<a>
+  を使用して背景を削除することを推奨します。。)<br>
+・APIに対応していない場合は、ファイルを読み込めない場合があります。<br><br>
+<div class="upload"><input type="file" id="file"><br><br>
+<input type="button" value="画像をクリア" onclick="ClearCanvas()" style="WIDTH:110px; HEIGHT:25px"><br>
+<form name = "form0">
+画像を表示する<input type="checkbox" checked = "checked">
+</form>
+糖度(Brix％)：
+<span id="result"></span><br><br>
+<canvas id="canvas"></canvas><br>
+<script src="banana.js"></script>
 </body>
 </html>
