@@ -56,7 +56,7 @@ function canvasDraw() {
       || data[2].label == "banana"){
         Calculate();
       }else{
-        alert("この画像はバナナの画像ではない可能性があります");
+        alert("この画像はバナナの画像ではないようです");
         result.innerHTML = "";
         file.value = "";
         if(!(document.form0.elements[0].checked)){
