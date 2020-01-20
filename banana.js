@@ -22,6 +22,7 @@ if(window.File && window.FileReader && window.FileList && window.Blob) {
     var fileData = e.target.files[0];
     if(!fileData.type.match("image.*")) {
       alert("画像を選択してください");
+      file.value = "";
       return;
     };
     var reader = new FileReader();
@@ -33,7 +34,7 @@ if(window.File && window.FileReader && window.FileList && window.Blob) {
   };
 }else{
   file.style.display = "none";
-  result.innerHTML = "APIに対応したブラウザで試してみてください";
+  alert("APIに対応したブラウザで試してみてください");
 };
 file.addEventListener("change", loadLocalImage, false);
 
@@ -57,7 +58,7 @@ function canvasDraw() {
         Calculate();
       }else{
         alert("この画像はバナナの画像ではないようです");
-        result.innerHTML = "";
+        result.innerHTML = "None";
         file.value = "";
         if(!(document.form0.elements[0].checked)){
         ClearCanvas();
