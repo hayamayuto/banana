@@ -86,15 +86,13 @@ function Calculate(){
   }
   for(var i = 0; i <canvas.width; i++){
     for(var j = 0; j <canvas.height; j++){
-      if(imageData.getRGB(i,j,2) >= b1 - 30 && imageData.getRGB(i,j,2) <= b1 + 30){
-        if(imageData.getRGB(i,j,0) == r1
-        || imageData.getRGB(i,j,1) == g1
-        || imageData.getRGB(i,j,0) == g2
-        || imageData.getRGB(i,j,1) == r2
-        || imageData.getRGB(i,j,0) == r3
-        || imageData.getRGB(i,j,1) == g3){
-          k = k + 1;
-        };
+      if(imageData.getRGB(i,j,0) == r1
+      || imageData.getRGB(i,j,1) == g1
+      || imageData.getRGB(i,j,0) == g2
+      || imageData.getRGB(i,j,1) == r2
+      || imageData.getRGB(i,j,0) == r3
+      || imageData.getRGB(i,j,1) == g3){
+        k = k + 1;
       };
     };
   };
