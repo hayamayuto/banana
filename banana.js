@@ -6,10 +6,6 @@ let data = [];
 var sugar;
 var result = document.getElementById("result");
 const classifier = ml5.imageClassifier("MobileNet", modelLoaded);
-function modelLoaded(){
-  alert("機械学習のモデルのロードが完了しました");
-  document.getElementById("file").disabled = "";
-}
 
 window.onload = function(){
   canvas.width = 0;
@@ -17,6 +13,12 @@ window.onload = function(){
   document.getElementById("file").disabled = "disabled";
   alert("機械学習のモデルをロード中（ロードには数秒かかります）");
 }
+
+function modelLoaded(){
+  alert("機械学習のモデルのロードが完了しました");
+  document.getElementById("file").disabled = "";
+}
+
 if(window.File && window.FileReader && window.FileList && window.Blob) {
   function loadLocalImage(e) {
     var fileData = e.target.files[0];
