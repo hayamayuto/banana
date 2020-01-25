@@ -15,7 +15,7 @@ window.onload = function(){
   canvas.width = 0;
   canvas.height = 0;
   document.getElementById("file").disabled = "disabled";
-  alert("機械学習のモデルをロード中");
+  alert("機械学習のモデルをロード中（ロードには数秒かかります）");
 }
 if(window.File && window.FileReader && window.FileList && window.Blob) {
   function loadLocalImage(e) {
