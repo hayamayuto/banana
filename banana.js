@@ -72,7 +72,6 @@ function canvasDraw() {
 
 function Calculate(){
   var k = 0;
-  var b1 = 40;
   var r1 = 167;
   var g1 = 132;
   var r2 = 190;
@@ -88,15 +87,15 @@ function Calculate(){
     for(var j = 0; j <canvas.height; j++){
       if(imageData.getRGB(i,j,0) == r1
       || imageData.getRGB(i,j,1) == g1
-      || imageData.getRGB(i,j,0) == g2
-      || imageData.getRGB(i,j,1) == r2
+      || imageData.getRGB(i,j,0) == r2
+      || imageData.getRGB(i,j,1) == g2
       || imageData.getRGB(i,j,0) == r3
       || imageData.getRGB(i,j,1) == g3){
         k = k + 1;
       };
     };
   };
-  sugar = 285.902578*k/canvas.size+18.54427223;
+  sugar = 154.587032141276*k/canvas.size+18.311468903557;
   result.innerHTML = Math.round(sugar*10)/10;
   file.value = "";
   if(!(document.form0.elements[0].checked)){
