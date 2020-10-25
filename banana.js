@@ -10,12 +10,10 @@ window.onload = function(){
   canvas.width = 0;
   canvas.height = 0;
   document.getElementById("file").disabled = "disabled";
-  document.getElementById("progress").innerHTML="機械学習モデルをロード中"
-  //alert("機械学習のモデルをロード中（ロードには数秒かかります）");
+  document.getElementById("progress").innerHTML="機械学習モデルをロード中..."
 }
 
 function modelLoaded(){
-  //alert("機械学習のモデルのロードが完了しました");
   document.getElementById("progressbar").value = 100;
   document.getElementById("progress").innerHTML="機械学習モデルのロードが完了しました"
   document.getElementById("file").disabled = "";
@@ -43,6 +41,7 @@ if(window.File && window.FileReader && window.FileList && window.Blob) {
 file.addEventListener("change", loadLocalImage, false);
 
 function canvasDraw() {
+  document.getElementById("progress").innerHTML="計算中..."
   document.getElementById("progressbar").value = 0;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   var img = new Image();
@@ -55,11 +54,10 @@ function canvasDraw() {
       data = ImageType;
       if(error){
         alert("エラーが発生しました");
-      }else if{
-        ctx.drawImage(img, 0, 0);
-        (data[0].label == "banana"
+      }else if(data[0].label == "banana"
              || data[1].label == "banana"
              || data[2].label == "banana"){
+               ctx.drawImage(img, 0, 0);
                Calculate();
         }else{
           alert("この画像はバナナの画像ではないようです");
@@ -67,12 +65,12 @@ function canvasDraw() {
           file.value = "";
           if(!(document.form0.elements[0].checked)){
           ClearCanvas();
-          };
         };
       };
     };
   };
   document.getElementById("progressbar").value = 100;
+  document.getElementById("progress").innerHTML="計算完了!"
 };
 
 function Calculate(){
@@ -119,6 +117,7 @@ function ClearCanvas(){
   var canvas2 = document.getElementById("canvas");
   canvas2.width = 0;
   canvas2.height = 0;
+  document.getElementById("progress").innerHTML=""
 };
 
 function ClearFile(){
