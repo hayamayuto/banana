@@ -11,9 +11,11 @@ window.onload = function(){
   canvas.height = 0;
   document.getElementById("file").disabled = "disabled";
   document.getElementById("progress").innerHTML="機械学習モデルをロード中"
+  //alert("機械学習のモデルをロード中（ロードには数秒かかります）");
 }
 
 function modelLoaded(){
+  //alert("機械学習のモデルのロードが完了しました");
   document.getElementById("progressbar").value = 100;
   document.getElementById("progress").innerHTML="機械学習モデルのロードが完了しました"
   document.getElementById("file").disabled = "";
@@ -21,7 +23,6 @@ function modelLoaded(){
 
 if(window.File && window.FileReader && window.FileList && window.Blob) {
   function loadLocalImage(e) {
-    document.getElementById("progressbar").value = 0;
     var fileData = e.target.files[0];
     if(!fileData.type.match("image.*")) {
       alert("画像を選択してください");
@@ -42,6 +43,7 @@ if(window.File && window.FileReader && window.FileList && window.Blob) {
 file.addEventListener("change", loadLocalImage, false);
 
 function canvasDraw() {
+  document.getElementById("progressbar").value = 0;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   var img = new Image();
   img.src = uploadImgSrc;
@@ -53,23 +55,24 @@ function canvasDraw() {
       data = ImageType;
       if(error){
         alert("エラーが発生しました");
-        return;
-      }
-      ctx.drawImage(img, 0, 0);
-      if(data[0].label == "banana"
-      || data[1].label == "banana"
-      || data[2].label == "banana"){
-        Calculate();
-      }else{
-        alert("この画像はバナナの画像ではないようです");
-        result.innerHTML = "None";
-        file.value = "";
-        if(!(document.form0.elements[0].checked)){
-        ClearCanvas();
+      }else if{
+        ctx.drawImage(img, 0, 0);
+        (data[0].label == "banana"
+             || data[1].label == "banana"
+             || data[2].label == "banana"){
+               Calculate();
+        }else{
+          alert("この画像はバナナの画像ではないようです");
+          result.innerHTML = "None";
+          file.value = "";
+          if(!(document.form0.elements[0].checked)){
+          ClearCanvas();
+          };
         };
       };
     };
   };
+  document.getElementById("progressbar").value = 100;
 };
 
 function Calculate(){
