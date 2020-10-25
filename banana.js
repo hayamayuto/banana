@@ -99,8 +99,6 @@ function Calculate(){
       };
     };
   };
-  console.log(sumR);
-  console.log(sumG);
   var x = (sumR/(canvas.size-supR)+sumG/(canvas.size-supG))/2;
   //(* arithmetic mean of cumulative relative frequency of R value and G value);
   sugar = 5.364725266316210*x+16.795256433435;
