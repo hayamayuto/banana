@@ -10,21 +10,21 @@
 h1 {
   font-weight: normal;
   font-size: 26px;
-  position: relative;
-  margin-bottom: 0;
-  text-align: center;
+	position: relative;
+	margin-bottom: 0;
+	text-align: center;
 }
 h1:before {
-  content: '';
-  position: absolute;
-  bottom: -15px;
-  display: inline-block;
-  width: 10%;
-  height: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #ffe135;
-  border-radius: 2px;
+	content: '';
+	position: absolute;
+	bottom: -15px;
+	display: inline-block;
+	width: 10%;
+	height: 5px;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: #ffe135;
+	border-radius: 2px;
 }
 p {
   font-size:16px;
@@ -50,10 +50,10 @@ p {
 <div style="margin:auto;width:30%;">
 <span id="progress" style="color:#0000FF;font-weight:bold"></span><br>
 <progress id="progressbar"></progress><br>
-<input id="file" class="upload" type="file" style="margin-bottom:5px;;margin-top:5px" onclick="ClearFile();"><br>
-<input type="button" value="画像をクリア" onclick="ClearCanvas();"><br>
+<input id="file" class="upload" type="file" style="margin-top:5px" onclick="ClearFile();"><br>
 <b>糖度（Brix％）: </b><input id= "result" type="text" style="font-weight:bold;width:100px;margin-top:8px;margin-bottom:5px;">
 <form name = "form0" style="margin-bottom:2px">画像を下に表示する<input type="checkbox" checked = "checked"></form>
+<input type="button" value="画像をクリア" onclick="ClearCanvas();">
 </div><br>
 <canvas id="canvas"></canvas>
 <script src="banana.js"></script>
