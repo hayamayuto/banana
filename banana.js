@@ -1,118 +1,62 @@
-var file = document.getElementById("file");
-var canvas = document.getElementById("canvas");
-var uploadImgSrc;
-var ctx = canvas.getContext("2d");
-let data = [];
-var sugar;
-var result = document.getElementById("result");
-const classifier = ml5.imageClassifier("MobileNet", modelLoaded);
 
-window.onload = function(){
-  canvas.width = 0;
-  canvas.height = 0;
-  document.getElementById("file").disabled = "disabled";
-  alert("機械学習のモデルをロード中（ロードには数秒かかります）");
+<!DOCTYPE.html>
+<html lang="ja">
+<meta charset="UTF-8">
+<head>
+<title>バナナ糖度計</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://unpkg.com/ml5@0.4.3/dist/ml5.min.js"></script>
+</head>
+<style>
+h1 {
+  font-weight: normal;
+  font-size: 26px;
+	position: relative;
+	margin-bottom: 0;
+	text-align: center;
 }
-
-function modelLoaded(){
-  alert("機械学習のモデルのロードが完了しました");
-  document.getElementById("file").disabled = "";
+h1:before {
+	content: '';
+	position: absolute;
+	bottom: -15px;
+	display: inline-block;
+	width: 10%;
+	height: 5px;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: #ffe135;
+	border-radius: 2px;
 }
-
-if(window.File && window.FileReader && window.FileList && window.Blob) {
-  function loadLocalImage(e) {
-    var fileData = e.target.files[0];
-    if(!fileData.type.match("image.*")) {
-      alert("画像を選択してください");
-      file.value = "";
-      return;
-    };
-    var reader = new FileReader();
-    reader.onload = function() {
-      uploadImgSrc = reader.result;
-      canvasDraw();
-    };
-    reader.readAsDataURL(fileData);
-  };
-}else{
-  file.style.display = "none";
-  alert("APIに対応したブラウザで試してみてください");
-};
-file.addEventListener("change", loadLocalImage, false);
-
-function canvasDraw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  var img = new Image();
-  img.src = uploadImgSrc;
-  img.onload = function() {
-    canvas.width = img.naturalWidth;
-    canvas.height = img.naturalHeight;
-    classifier.classify(img, getImageType);
-    function getImageType(error, ImageType){
-      data = ImageType;
-      if(error){
-        alert("エラーが発生しました");
-        return;
-      }
-      ctx.drawImage(img, 0, 0);
-      if(data[0].label == "banana"
-      || data[1].label == "banana"
-      || data[2].label == "banana"){
-        Calculate();
-      }else{
-        alert("この画像はバナナの画像ではないようです");
-        result.innerHTML = "None";
-        file.value = "";
-        if(!(document.form0.elements[0].checked)){
-        ClearCanvas();
-        };
-      };
-    };
-  };
-};
-
-function Calculate(){
-  var sumR = 0;
-  var sumG = 0;
-  var supR = 0;
-  var supG = 0;
-  var maxR = 234;
-  var maxG = 203;
-  var minR = 138;
-  var minG = 110;
-  canvas.size = canvas.width*canvas.height;
-  var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
-  imageData.getRGB = function(x,y,z){
-    return this.data[this.width*4*y+4*x+z];
+  p {
+    font-size:16px;
+    line-height:2;
+    width:90%;
+    margin:auto;
   }
-  for(var i = 0; i <canvas.width; i++){
-    for(var j = 0; j <canvas.height; j++){
-      if(imageData.getRGB(i,j,0) == 255){
-        supR += 1
-      }else if(imageData.getRGB(i,j,0) <= maxR && imageData.getRGB(i,j,0) >= minR){
-        sumR += 1
-      };
-      if(imageData.getRGB(i,j,1) == 255){
-        supG += 1
-      }else if(imageData.getRGB(i,j,1) <= maxG && imageData.getRGB(i,j,1) >= minG){
-        sumG += 1;
-      };
-    };
-  };
-  var x = (sumR/(canvas.size-supR)+sumG/(canvas.size-supG))/2;
-  //(* arithmetic mean of cumulative relative frequency of R value and G value);
-  sugar = 5.364725266316210*x+16.795256433435;
-  console.log("Sugar Content:"+sugar);
-  result.innerHTML = (Math.round(sugar*10)/10).toFixed(1);
-  file.value = "";
-  if(!(document.form0.elements[0].checked)){
-    ClearCanvas();
-  };
-};
-
-function ClearCanvas(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  var canvas2 = document.getElementById("canvas");
-  canvas2.width = 0;
-  canvas2.height = 0;
-};
+</style>
+<body>
+<h1>最新式バナナ糖度計</h1>
+<br>
+<div style="text-align:center">
+<img src="img/logo.jpg" style="width:20%;margin-top:2px;margin-bottom:2px"><br>
+</div>
+<p>
+バナナの画像を「ファイルを選択」からアップロードすると自動で糖度を推定します。<br>
+・できるだけバナナが写真の中央に位置し、全体を含むようにしてください。<br>
+・背景が白いほうが正確性が向上します。（
+<a href="https://www.remove.bg/">removebg<a>
+を使用して背景を削除することを推奨します。）<br>
+・APIに対応していない場合は、ファイルを読み込めない場合があります。
+</p>
+<div style="margin:auto;width:30%;">
+<span id="progress" style="color:#0000FF;font-weight:bold"></span><br>
+<progress id="progressbar"></progress><br>
+<input id="file" class="upload" type="file" style="margin-bottom:5px;;margin-top:5px" onclick="ClearFile();"><br>
+<input type="button" value="画像をクリア" onclick="ClearCanvas();"><br>
+<b>糖度（Brix％）: </b><input id= "result" type="text" style="font-weight:bold;width:100px;margin-top:8px;margin-bottom:5px;">
+<form name = "form0" style="margin-bottom:2px">画像を下に表示する<input type="checkbox" checked = "checked"></form>
+</div><br>
+<canvas id="canvas"></canvas>
+<script src="banana.js"></script>
+</body>
+</html>
