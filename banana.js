@@ -47,12 +47,13 @@ function canvasDraw() {
   img.onload = function() {
     canvas.width = img.naturalWidth;
     canvas.height = img.naturalHeight;
-    classifier.classify(img, gotResults);
-    function gotResults(error, results){
+    classifier.classify(img, getImageType);
+    function getImageType(error, ImageType){
+      data = ImageType;
       if(error){
         alert("エラーが発生しました");
-      };
-      data = results;
+        return;
+      }
       ctx.drawImage(img, 0, 0);
       if(data[0].label == "banana"
       || data[1].label == "banana"
@@ -71,13 +72,14 @@ function canvasDraw() {
 };
 
 function Calculate(){
-  var k = 0;
-  var r1 = 167;
-  var g1 = 132;
-  var r2 = 190;
-  var g2 = 156;
-  var r3 = 223;
-  var g3 = 190;
+  var sumR = 0;
+  var sumG = 0;
+  var supR = 0;
+  var supG = 0;
+  var maxR = 234;
+  var maxG = 203;
+  var minR = 138;
+  var minG = 110;
   canvas.size = canvas.width*canvas.height;
   var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
   imageData.getRGB = function(x,y,z){
@@ -85,18 +87,25 @@ function Calculate(){
   }
   for(var i = 0; i <canvas.width; i++){
     for(var j = 0; j <canvas.height; j++){
-      if(imageData.getRGB(i,j,0) == r1
-      || imageData.getRGB(i,j,1) == g1
-      || imageData.getRGB(i,j,0) == r2
-      || imageData.getRGB(i,j,1) == g2
-      || imageData.getRGB(i,j,0) == r3
-      || imageData.getRGB(i,j,1) == g3){
-        k = k + 1;
+      if(imageData.getRGB(i,j,0) == 255){
+        supR += 1
+      }else if(imageData.getRGB(i,j,0) <= maxR && imageData.getRGB(i,j,0) >= minR){
+        sumR += 1
+      };
+      if(imageData.getRGB(i,j,1) == 255){
+        supG += 1
+      }else if(imageData.getRGB(i,j,1) <= maxG && imageData.getRGB(i,j,1) >= minG){
+        sumG += 1;
       };
     };
   };
-  sugar = 154.587032141276*k/canvas.size+18.311468903557;
-  result.innerHTML = Math.round(sugar*10)/10;
+  console.log(sumR);
+  console.log(sumG);
+  var x = (sumR/(canvas.size-supR)+sumG/(canvas.size-supG))/2;
+  //(* arithmetic mean of cumulative relative frequency of R value and G value);
+  sugar = 5.364725266316210*x+16.795256433435;
+  console.log("Sugar Content:"+sugar);
+  result.innerHTML = (Math.round(sugar*10)/10).toFixed(1);
   file.value = "";
   if(!(document.form0.elements[0].checked)){
     ClearCanvas();
