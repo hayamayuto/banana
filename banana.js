@@ -41,8 +41,6 @@ if(window.File && window.FileReader && window.FileList && window.Blob) {
 file.addEventListener("change", loadLocalImage, false);
 
 function canvasDraw() {
-  document.getElementById("progress").innerHTML="計算中..."
-  document.getElementById("progressbar").value = 0;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   var img = new Image();
   img.src = uploadImgSrc;
@@ -69,8 +67,6 @@ function canvasDraw() {
       };
     };
   };
-  document.getElementById("progressbar").value = 100;
-  document.getElementById("progress").innerHTML="計算完了!"
 };
 
 function Calculate(){
@@ -102,11 +98,10 @@ function Calculate(){
     };
   };
   var x = (sumR/(canvas.size-supR)+sumG/(canvas.size-supG))/2;
-  //(* arithmetic mean of cumulative relative frequency of R value and G value);
   sugar = 5.364725266316210*x+16.795256433435;
   console.log("Sugar Content:"+sugar);
   document.getElementById("progressbar").value = 100;
-  document.getElementById("result").value = (Math.round(sugar*10)/10).toFixed(1);
+  document.getElementById("result").value = (Math.round(sugar*10)/10).toFixed(1) + "%";
   if(!(document.form0.elements[0].checked)){
     ClearCanvas();
   };
@@ -117,7 +112,6 @@ function ClearCanvas(){
   var canvas2 = document.getElementById("canvas");
   canvas2.width = 0;
   canvas2.height = 0;
-  document.getElementById("progress").innerHTML=""
 };
 
 function ClearFile(){
