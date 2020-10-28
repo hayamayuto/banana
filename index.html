@@ -1,3 +1,4 @@
+
 <!DOCTYPE.html>
 <html lang="ja">
 <meta charset="UTF-8">
@@ -27,34 +28,32 @@ h1:before {
 	border-radius: 2px;
 }
 p {
-  font-size:16px;
   line-height:2;
-  width:90%;
-  margin:auto;
+  margin-left:5%;
+  margin-right:5%;
 }
 </style>
 <body>
 <h1>最新式バナナ糖度計</h1>
 <br>
-<div style="text-align:center">
-<img src="img/logo.jpg" style="width:20%;margin-top:2px;margin-bottom:2px"><br>
+<div style="text-align:center;">
+<img src="img/logo.jpg" style="width:300px;margin-top:2px;margin-bottom:2px"><br>
+<span id="progress" style="color:#0000FF;font-weight:bold"></span><br>
+<progress id="progressbar"></progress><br>
 </div>
 <p>
 バナナの画像を「ファイルを選択」からアップロードすると自動で糖度を推定します。<br>
-・できるだけバナナが写真の中央に位置し、全体を含むようにしてください。<br>
+・できるだけバナナを写真の中央に配置し、全体が写るようにしてください。<br>
 ・背景が白いほうが正確性が向上します。（
-<a href="https://www.remove.bg/">removebg<a>
+<a href="https://www.remove.bg/">remove.bg<a>
 を使用して背景を削除することを推奨します。）<br>
-・APIに対応していない場合は、ファイルを読み込めない場合があります。
-</p>
-<div style="margin:auto;width:30%;">
-<span id="progress" style="color:#0000FF;font-weight:bold"></span><br>
-<progress id="progressbar"></progress><br>
-<input id="file" class="upload" type="file" style="margin-top:5px" onclick="ClearFile();"><br>
-<b>糖度（Brix％）: </b><input id= "result" type="text" style="font-weight:bold;width:100px;margin-top:8px;margin-bottom:5px;">
-<form name = "form0" style="margin-bottom:2px">画像を下に表示する<input type="checkbox" checked = "checked"></form>
+・APIに対応していない場合は、ファイルを読み込めないことがあります。<br>
+<input id="file" class="upload" type="file" onclick="ClearFile();" style="font-size:14px">
+<b>糖度: </b><input id= "result" type="text" style="font-weight:bold;font-size:16px;width:120px;height:24px;" placeholder="Brix %">
+<br>
+<form name = "form0" style="margin-left:5%;">画像を下に表示する<input type="checkbox" checked = "checked"></form>
 <input type="button" value="画像をクリア" onclick="ClearCanvas();">
-</div><br>
+</p>
 <canvas id="canvas"></canvas>
 <script src="banana.js"></script>
 </body>
